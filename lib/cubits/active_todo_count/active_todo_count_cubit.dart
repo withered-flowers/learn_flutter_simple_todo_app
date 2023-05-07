@@ -9,11 +9,11 @@ import 'package:simple_todo_app/models/todo_model.dart';
 part 'active_todo_count_state.dart';
 
 class ActiveTodoCountCubit extends Cubit<ActiveTodoCountState> {
+  final TodoListCubit todoListCubit;
+
   // Since this will be a computed which will be initialize later,
   // We need to use "late"
   late final StreamSubscription todoListSubscription;
-
-  final TodoListCubit todoListCubit;
 
   ActiveTodoCountCubit({
     required this.todoListCubit,
@@ -38,7 +38,6 @@ class ActiveTodoCountCubit extends Cubit<ActiveTodoCountState> {
 
   // Since we have a subscription, for not leaking, we need to have
   // a unsubscribe logic
-
   @override
   Future<void> close() {
     todoListSubscription.cancel();
