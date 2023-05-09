@@ -8,6 +8,8 @@ class TodoListState extends Equatable {
   });
 
   factory TodoListState.initial() {
+    // Assumption:
+    // All Initial State have completed set to false
     return TodoListState(
       todos: [
         Todo(id: '1', desc: "Learning Dart", completed: true),

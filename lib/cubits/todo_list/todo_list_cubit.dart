@@ -10,7 +10,6 @@ class TodoListCubit extends Cubit<TodoListState> {
   // Adding new Todo
   void addTodo(String todoDesc) {
     final newTodo = Todo(desc: todoDesc);
-
     // State is immutable, need to make new state value and replace it
     final newTodos = [...state.todos, newTodo];
 
@@ -40,7 +39,7 @@ class TodoListCubit extends Cubit<TodoListState> {
       if (todo.id == id) {
         return Todo(
           id: todo.id,
-          desc: todo.id,
+          desc: todo.desc,
           completed: !todo.completed,
         );
       }
