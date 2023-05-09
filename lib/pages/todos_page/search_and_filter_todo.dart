@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simple_todo_app/cubits/cubits.dart';
-import 'package:simple_todo_app/cubits/todo_search/todo_search_cubit.dart';
 import 'package:simple_todo_app/models/todo_model.dart';
+import 'package:simple_todo_app/utils/debounce.dart';
 
 class SearchAndFilterTodo extends StatelessWidget {
-  const SearchAndFilterTodo({super.key});
+  // Implementing Debounce for search
+  final Debounce debounce = Debounce(milliseconds: 1000);
+
+  SearchAndFilterTodo({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         TextField(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Search todos...',
             border: InputBorder.none,
             filled: true,
@@ -20,11 +23,14 @@ class SearchAndFilterTodo extends StatelessWidget {
           ),
           onChanged: (String? newSearchTerm) {
             if (newSearchTerm != null) {
-              context.read<TodoSearchCubit>().setSearchTerm(newSearchTerm);
+              // Debounce the search
+              debounce.run(() {
+                context.read<TodoSearchCubit>().setSearchTerm(newSearchTerm);
+              });
             }
           },
         ),
-        SizedBox(
+        const SizedBox(
           height: 16.0,
         ),
         Row(
