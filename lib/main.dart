@@ -30,8 +30,9 @@ class MyApp extends StatelessWidget {
         // This will required a "computed" cubit from TodoListCubit
         BlocProvider<ActiveTodoCountCubit>(
           create: (context) => ActiveTodoCountCubit(
-            // We will use the "of" and require Type of TodoListCubit
-            todoListCubit: BlocProvider.of<TodoListCubit>(context),
+            // Since we are using BlocListener, we don't need initialValue
+            // for todoListCubit anymore
+            // -----
             // We will add initialState for activeTodoCount
             initialActiveTodoCount: context
                 .read<TodoListCubit>()
@@ -44,12 +45,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<FilteredTodosCubit>(
           create: (context) => FilteredTodosCubit(
-            // We will use the "of" and require Type of TodoFilterCubit
-            todoFilterCubit: BlocProvider.of<TodoFilterCubit>(context),
-            // We will use the "of" and require Type of TodoSearchCubit
-            todoSearchCubit: BlocProvider.of<TodoSearchCubit>(context),
-            // We will use the "of" and require Type of TodoListCubit
-            todoListCubit: BlocProvider.of<TodoListCubit>(context),
+            // We will use BlocListener, so we don't need Cubit as parameter here
             // Now we need the initialValue to show
             initialTodos: context.read<TodoListCubit>().state.todos,
           ),
