@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:simple_todo_app/cubits/cubits.dart';
+import 'package:simple_todo_app/blocs/blocs.dart';
 import 'package:simple_todo_app/models/todo_model.dart';
 import 'package:simple_todo_app/pages/todos_page/todos_page.dart';
 
@@ -18,24 +18,20 @@ class MyApp extends StatelessWidget {
     // (From React? Think this as a Context)
     return MultiBlocProvider(
       providers: [
-        BlocProvider<TodoFilterCubit>(
-          create: (context) => TodoFilterCubit(),
+        BlocProvider<TodoFilterBloc>(
+          create: (context) => TodoFilterBloc(),
         ),
-        BlocProvider<TodoSearchCubit>(
-          create: (context) => TodoSearchCubit(),
+        BlocProvider<TodoSearchBloc>(
+          create: (context) => TodoSearchBloc(),
         ),
-        BlocProvider<TodoListCubit>(
-          create: (context) => TodoListCubit(),
+        BlocProvider<TodoListBloc>(
+          create: (context) => TodoListBloc(),
         ),
-        // This will required a "computed" cubit from TodoListCubit
-        BlocProvider<ActiveTodoCountCubit>(
-          create: (context) => ActiveTodoCountCubit(
-            // Since we are using BlocListener, we don't need initialValue
-            // for todoListCubit anymore
-            // -----
-            // We will add initialState for activeTodoCount
+        BlocProvider<ActiveTodoCountBloc>(
+          create: (context) => ActiveTodoCountBloc(
+            todoListBloc: BlocProvider.of<TodoListBloc>(context),
             initialActiveTodoCount: context
-                .read<TodoListCubit>()
+                .read<TodoListBloc>()
                 .state
                 .todos
                 .where((Todo todo) => !todo.completed)
@@ -43,11 +39,12 @@ class MyApp extends StatelessWidget {
                 .length,
           ),
         ),
-        BlocProvider<FilteredTodosCubit>(
-          create: (context) => FilteredTodosCubit(
-            // We will use BlocListener, so we don't need Cubit as parameter here
-            // Now we need the initialValue to show
-            initialTodos: context.read<TodoListCubit>().state.todos,
+        BlocProvider<FilteredTodosBloc>(
+          create: (context) => FilteredTodosBloc(
+            initialTodos: context.read<TodoListBloc>().state.todos,
+            todoFilterBloc: BlocProvider.of<TodoFilterBloc>(context),
+            todoSearchBloc: BlocProvider.of<TodoSearchBloc>(context),
+            todoListBloc: BlocProvider.of<TodoListBloc>(context),
           ),
         ),
       ],
